@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoja de Personaje D&D 2024</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+    <div class="character-sheet">
+        <button class="nav-button prev" id="prevBtn">&larr;</button>
+        <div class="pages-container">
+            <div class="page" id="page1">
+                <h1>Página 1: Información Básica</h1>
+                <p>Nombre: <input type="text" id="name"></p>
+                <p>Clase: <input type="text" id="class"></p>
+                <p>Raza: <input type="text" id="race"></p>
+                <p>Nivel: <input type="number" id="level"></p>
+                <p>Fondo: <input type="text" id="background"></p>
+                <!-- Más campos según la ficha real -->
+            </div>
+            <div class="page" id="page2">
+                <h1>Página 2: Atributos y Habilidades</h1>
+                <p>Fuerza: <input type="number" id="str"></p>
+                <p>Destreza: <input type="number" id="dex"></p>
+                <p>Constitución: <input type="number" id="con"></p>
+                <p>Inteligencia: <input type="number" id="int"></p>
+                <p>Sabiduría: <input type="number" id="wis"></p>
+                <p>Carisma: <input type="number" id="cha"></p>
+                <!-- Habilidades, etc. -->
+            </div>
+            <div class="page" id="page3">
+                <h1>Página 3: Equipamiento</h1>
+                <p>Armadura: <input type="text" id="armor"></p>
+                <p>Arma principal: <input type="text" id="weapon"></p>
+                <!-- Inventario -->
+            </div>
+            <div class="page" id="page4">
+                <h1>Página 4: Hechizos y Rasgos</h1>
+                <p>Hechizos conocidos: <textarea id="spells"></textarea></p>
+                <p>Rasgos: <textarea id="traits"></textarea></p>
+            </div>
+        </div>
+        <button class="nav-button next" id="nextBtn">&rarr;</button>
+    </div>
+    <script src="js/index.js"></script>
+</body>
+
+</html>

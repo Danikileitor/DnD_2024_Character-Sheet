@@ -1,0 +1,84 @@
+body {
+    font-family: 'Times New Roman', serif;
+    background-color: #f4f1e8;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.character-sheet {
+    display: flex;
+    align-items: center;
+    width: 90vw;
+    height: 90vh;
+    background-color: #fff;
+    border: 2px solid #8b4513;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.nav-button {
+    background-color: #8b4513;
+    color: white;
+    border: none;
+    font-size: 2rem;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.nav-button:hover {
+    background-color: #a0522d;
+}
+
+.pages-container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.page {
+    flex: 1;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+/* Portrait: mostrar una página */
+@media (orientation: portrait) {
+    .pages-container {
+        display: block;
+    }
+    .page {
+        width: 100%;
+    }
+}
+
+/* Landscape: mostrar dos páginas */
+@media (orientation: landscape) {
+    .pages-container {
+        display: flex;
+    }
+    .page {
+        flex: 1;
+    }
+    .page.active + .page.active {
+        display: block;
+    }
+}
+
+/* Para landscape, mostrar pares de páginas */
+@media (orientation: landscape) {
+    .page:nth-child(odd).active {
+        display: block;
+    }
+    .page:nth-child(even).active {
+        display: block;
+    }
+}
