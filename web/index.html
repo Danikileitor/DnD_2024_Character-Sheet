@@ -2,50 +2,882 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hoja de Personaje D&D 2024</title>
-    <link rel="stylesheet" href="css/index.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ficha D&D 5.5 2024</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
-    <div class="character-sheet">
-        <button class="nav-button prev" id="prevBtn">&larr;</button>
-        <div class="pages-container">
-            <div class="page" id="page1">
-                <h1>Página 1: Información Básica</h1>
-                <p>Nombre: <input type="text" id="name"></p>
-                <p>Clase: <input type="text" id="class"></p>
-                <p>Raza: <input type="text" id="race"></p>
-                <p>Nivel: <input type="number" id="level"></p>
-                <p>Fondo: <input type="text" id="background"></p>
-                <!-- Más campos según la ficha real -->
-            </div>
-            <div class="page" id="page2">
-                <h1>Página 2: Atributos y Habilidades</h1>
-                <p>Fuerza: <input type="number" id="str"></p>
-                <p>Destreza: <input type="number" id="dex"></p>
-                <p>Constitución: <input type="number" id="con"></p>
-                <p>Inteligencia: <input type="number" id="int"></p>
-                <p>Sabiduría: <input type="number" id="wis"></p>
-                <p>Carisma: <input type="number" id="cha"></p>
-                <!-- Habilidades, etc. -->
-            </div>
-            <div class="page" id="page3">
-                <h1>Página 3: Equipamiento</h1>
-                <p>Armadura: <input type="text" id="armor"></p>
-                <p>Arma principal: <input type="text" id="weapon"></p>
-                <!-- Inventario -->
-            </div>
-            <div class="page" id="page4">
-                <h1>Página 4: Hechizos y Rasgos</h1>
-                <p>Hechizos conocidos: <textarea id="spells"></textarea></p>
-                <p>Rasgos: <textarea id="traits"></textarea></p>
-            </div>
+
+  <!-- ===================== TOP BAR ===================== -->
+  <div class="top-bar">
+    <h1>⚔ D&D 5.5 2024 — Ficha de Personaje</h1>
+    <button class="btn btn-success" onclick="saveAll()">💾 Guardar</button>
+    <button class="btn btn-primary" onclick="exportPDF()">📄 Exportar PDF</button>
+    <button class="btn btn-warning" onclick="exportJSON()">📦 Exportar JSON</button>
+    <button class="btn btn-info" onclick="document.getElementById('json-import-input').click()">📂 Importar
+      JSON</button>
+    <button class="btn btn-info" onclick="openImportPDFModal()">📑 Importar PDF</button>
+    <button class="btn btn-danger" onclick="clearAll()">🗑 Limpiar</button>
+
+    <!-- Hidden inputs -->
+    <input type="file" id="json-import-input" accept=".json" style="display:none" onchange="importJSON(event)">
+    <input type="file" id="pdf-file-input" accept=".pdf" style="display:none" onchange="handlePDFFileInput(event)">
+  </div>
+
+  <!-- ===================== PAGE TABS ===================== -->
+  <div class="page-tabs">
+    <div class="page-tab active" onclick="switchPage(0)">Página 1 — Principal</div>
+    <div class="page-tab" onclick="switchPage(1)">Página 2 — Equipo</div>
+    <div class="page-tab" onclick="switchPage(2)">Página 3 — Conjuros</div>
+    <div class="page-tab" onclick="switchPage(3)">Página 4 — Historia</div>
+  </div>
+
+  <!-- ======================================================
+     PÁGINA 1 — PRINCIPAL
+     ====================================================== -->
+  <div class="sheet-page active" id="page-0">
+    <div class="sheet" id="sheet-p1">
+
+      <!-- CABECERA -->
+      <div class="header-fields">
+        <div>
+          <div class="sec-label">Nombre del Personaje</div><input class="field" id="nombre" placeholder="—">
         </div>
-        <button class="nav-button next" id="nextBtn">&rarr;</button>
+        <div>
+          <div class="sec-label">Clase</div><input class="field" id="clase" placeholder="—">
+        </div>
+        <div>
+          <div class="sec-label">Subclase</div><input class="field" id="subclase" placeholder="—">
+        </div>
+      </div>
+      <div class="header-fields2">
+        <div>
+          <div class="sec-label">Transfondo</div><input class="field" id="transfondo" placeholder="—">
+        </div>
+        <div>
+          <div class="sec-label">Especie</div><input class="field" id="especie" placeholder="—">
+        </div>
+        <div>
+          <div class="sec-label">XP</div><input class="field" id="xp" type="number" placeholder="0">
+        </div>
+      </div>
+
+      <div class="fancy-divider mt6"><span>⚔ Fifth Edition ⚔</span></div>
+
+      <!-- STATS SUPERIORES: NIVEL / BONIF / INSPIRACIÓN / CA / HP / DADOS / MUERTE -->
+      <div
+        style="display:grid;grid-template-columns:80px 80px 80px 1fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px;align-items:start;">
+
+        <div class="big-box">
+          <input class="big-number" id="nivel" type="number" value="1" min="1" max="20">
+          <div class="big-label">Nivel</div>
+        </div>
+
+        <div class="big-box">
+          <input class="big-number" id="bonif_comp" value="+2">
+          <div class="big-label">Bón. Comp.</div>
+        </div>
+
+        <div class="big-box" id="insp-box" onclick="toggleInspiration()" style="cursor:pointer;">
+          <div class="inspiration-icon">✦</div>
+          <div class="big-label">Inspiración</div>
+        </div>
+
+        <div class="big-box">
+          <input class="big-number" id="ca" type="number" value="10">
+          <div class="big-label">Clase Armadura</div>
+          <input class="field" id="escudo" placeholder="Escudo" style="font-size:0.7rem;margin-top:3px;width:60px;">
+        </div>
+
+        <div class="cbox">
+          <div class="sec-title" style="font-size:0.6rem;">Puntos de Golpe</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;">
+            <div>
+              <div class="sec-label">Actuales</div><input class="field" id="hp_act" type="number" placeholder="0">
+            </div>
+            <div>
+              <div class="sec-label">Máximo</div><input class="field" id="hp_max" type="number" placeholder="0">
+            </div>
+            <div>
+              <div class="sec-label">Temporales</div><input class="field" id="hp_temp" type="number" placeholder="0">
+            </div>
+          </div>
+        </div>
+
+        <div class="cbox">
+          <div class="sec-title" style="font-size:0.6rem;">Dados de Golpe</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+            <div>
+              <div class="sec-label">Gastados</div><input class="field" id="dg_gast" placeholder="0">
+            </div>
+            <div>
+              <div class="sec-label">Máximo</div><input class="field" id="dg_max" placeholder="1d8">
+            </div>
+          </div>
+        </div>
+
+        <div class="cbox">
+          <div class="sec-title" style="font-size:0.6rem;">Salv. Muerte</div>
+          <div style="margin-bottom:3px;">
+            <div class="sec-label">Éxitos</div>
+            <div class="death-row">
+              <div class="death-diamond" id="ds_e1" onclick="toggleDeath('ds_e1')"></div>
+              <div class="death-diamond" id="ds_e2" onclick="toggleDeath('ds_e2')"></div>
+              <div class="death-diamond" id="ds_e3" onclick="toggleDeath('ds_e3')"></div>
+            </div>
+          </div>
+          <div>
+            <div class="sec-label">Fallos</div>
+            <div class="death-row">
+              <div class="death-diamond" id="ds_f1" onclick="toggleDeath('ds_f1')"></div>
+              <div class="death-diamond" id="ds_f2" onclick="toggleDeath('ds_f2')"></div>
+              <div class="death-diamond" id="ds_f3" onclick="toggleDeath('ds_f3')"></div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /top row -->
+
+      <!-- CUERPO PRINCIPAL: IZQUIERDA (estadísticas) + DERECHA (combate/rasgos) -->
+      <div class="p1-main">
+
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="p1-left">
+
+          <!-- FUERZA -->
+          <div class="stat-block">
+            <div class="stat-name">Fuerza</div>
+            <div style="display:flex;gap:6px;justify-content:center;align-items:flex-end;margin-top:4px;">
+              <div style="text-align:center;"><input class="stat-mod" id="fue_mod" placeholder="+0">
+                <div class="stat-sub">Mod.</div>
+              </div>
+              <div style="text-align:center;"><input class="stat-score" id="fue_score" placeholder="10">
+                <div class="stat-sub">Punt.</div>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="fue_ts"> <span class="skill-bonus"
+                  id="fue_ts_b">+0</span> <span class="skill-name">T. de Salvación</span></div>
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="fue_atl"> <span class="skill-bonus"
+                  id="fue_atl_b">+0</span> <span class="skill-name">Atletismo</span></div>
+            </div>
+          </div>
+
+          <!-- DESTREZA -->
+          <div class="stat-block">
+            <div class="stat-name">Destreza</div>
+            <div style="display:flex;gap:6px;justify-content:center;align-items:flex-end;margin-top:4px;">
+              <div style="text-align:center;"><input class="stat-mod" id="des_mod" placeholder="+0">
+                <div class="stat-sub">Mod.</div>
+              </div>
+              <div style="text-align:center;"><input class="stat-score" id="des_score" placeholder="10">
+                <div class="stat-sub">Punt.</div>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="des_ts"> <span class="skill-bonus"
+                  id="des_ts_b">+0</span> <span class="skill-name">T. de Salvación</span></div>
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="des_ini"> <span class="skill-bonus"
+                  id="des_ini_b">+0</span> <span class="skill-name">Iniciativa</span></div>
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="des_acr"> <span class="skill-bonus"
+                  id="des_acr_b">+0</span> <span class="skill-name">Acrobacias</span></div>
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="des_jm"> <span class="skill-bonus"
+                  id="des_jm_b">+0</span> <span class="skill-name">Juego de Manos</span></div>
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="des_sig"> <span class="skill-bonus"
+                  id="des_sig_b">+0</span> <span class="skill-name">Sigilo</span></div>
+            </div>
+          </div>
+
+          <!-- CONSTITUCIÓN -->
+          <div class="stat-block">
+            <div class="stat-name">Constitución</div>
+            <div style="display:flex;gap:6px;justify-content:center;align-items:flex-end;margin-top:4px;">
+              <div style="text-align:center;"><input class="stat-mod" id="con_mod" placeholder="+0">
+                <div class="stat-sub">Mod.</div>
+              </div>
+              <div style="text-align:center;"><input class="stat-score" id="con_score" placeholder="10">
+                <div class="stat-sub">Punt.</div>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="con_ts"> <span class="skill-bonus"
+                  id="con_ts_b">+0</span> <span class="skill-name">T. de Salvación</span></div>
+            </div>
+          </div>
+
+          <!-- INTELIGENCIA -->
+          <div class="stat-block">
+            <div class="stat-name">Inteligencia</div>
+            <div style="display:flex;gap:6px;justify-content:center;align-items:flex-end;margin-top:4px;">
+              <div style="text-align:center;"><input class="stat-mod" id="int_mod" placeholder="+0">
+                <div class="stat-sub">Mod.</div>
+              </div>
+              <div style="text-align:center;"><input class="stat-score" id="int_score" placeholder="10">
+                <div class="stat-sub">Punt.</div>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="int_ts"> <span class="skill-bonus"
+                  id="int_ts_b">+0</span> <span class="skill-name">T. de Salvación</span></div>
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="int_arc"> <span class="skill-bonus"
+                  id="int_arc_b">+0</span> <span class="skill-name">C. Arcano</span></div>
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="int_his"> <span class="skill-bonus"
+                  id="int_his_b">+0</span> <span class="skill-name">Historia</span></div>
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="int_inv"> <span class="skill-bonus"
+                  id="int_inv_b">+0</span> <span class="skill-name">Investigación</span></div>
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="int_nat"> <span class="skill-bonus"
+                  id="int_nat_b">+0</span> <span class="skill-name">Naturaleza</span></div>
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="int_rel"> <span class="skill-bonus"
+                  id="int_rel_b">+0</span> <span class="skill-name">Religión</span></div>
+            </div>
+          </div>
+
+          <!-- SABIDURÍA -->
+          <div class="stat-block">
+            <div class="stat-name">Sabiduría</div>
+            <div style="display:flex;gap:6px;justify-content:center;align-items:flex-end;margin-top:4px;">
+              <div style="text-align:center;"><input class="stat-mod" id="sab_mod" placeholder="+0">
+                <div class="stat-sub">Mod.</div>
+              </div>
+              <div style="text-align:center;"><input class="stat-score" id="sab_score" placeholder="10">
+                <div class="stat-sub">Punt.</div>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="sab_ts"> <span class="skill-bonus"
+                  id="sab_ts_b">+0</span> <span class="skill-name">T. de Salvación</span></div>
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="sab_tan"> <span class="skill-bonus"
+                  id="sab_tan_b">+0</span> <span class="skill-name">T. Animales</span></div>
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="sab_per"> <span class="skill-bonus"
+                  id="sab_per_b">+0</span> <span class="skill-name">Perspicacia</span></div>
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="sab_med"> <span class="skill-bonus"
+                  id="sab_med_b">+0</span> <span class="skill-name">Medicina</span></div>
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="sab_perc"> <span class="skill-bonus"
+                  id="sab_perc_b">+0</span> <span class="skill-name">Percepción</span></div>
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="sab_sup"> <span class="skill-bonus"
+                  id="sab_sup_b">+0</span> <span class="skill-name">Supervivencia</span></div>
+            </div>
+          </div>
+
+          <!-- CARISMA -->
+          <div class="stat-block">
+            <div class="stat-name">Carisma</div>
+            <div style="display:flex;gap:6px;justify-content:center;align-items:flex-end;margin-top:4px;">
+              <div style="text-align:center;"><input class="stat-mod" id="car_mod" placeholder="+0">
+                <div class="stat-sub">Mod.</div>
+              </div>
+              <div style="text-align:center;"><input class="stat-score" id="car_score" placeholder="10">
+                <div class="stat-sub">Punt.</div>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="car_ts"> <span class="skill-bonus"
+                  id="car_ts_b">+0</span> <span class="skill-name">T. de Salvación</span></div>
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="car_eng"> <span class="skill-bonus"
+                  id="car_eng_b">+0</span> <span class="skill-name">Engaño</span></div>
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="car_int2"> <span class="skill-bonus"
+                  id="car_int2_b">+0</span> <span class="skill-name">Intimidación</span></div>
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="car_interp"> <span
+                  class="skill-bonus" id="car_interp_b">+0</span> <span class="skill-name">Interpretación</span></div>
+              <div class="skill-row"><input type="checkbox" class="skill-check" id="car_per"> <span class="skill-bonus"
+                  id="car_per_b">+0</span> <span class="skill-name">Persuasión</span></div>
+            </div>
+          </div>
+
+          <!-- ENTRENAMIENTO Y COMPETENCIAS -->
+          <div class="cbox">
+            <div class="sec-title">Entrenamiento y Competencias</div>
+            <div class="sec-label" style="margin-bottom:3px;">Armaduras</div>
+            <div class="training-row">
+              <label class="training-item"><input type="checkbox" id="arm_lig"> Ligera</label>
+              <label class="training-item"><input type="checkbox" id="arm_med"> Media</label>
+              <label class="training-item"><input type="checkbox" id="arm_pes"> Pesada</label>
+              <label class="training-item"><input type="checkbox" id="arm_esc"> Escudo</label>
+            </div>
+            <div class="sec-label" style="margin:4px 0 3px;">Armas</div>
+            <div class="training-row">
+              <label class="training-item"><input type="checkbox" id="arm_sen"> Sencilla</label>
+              <label class="training-item"><input type="checkbox" id="arm_mar"> Marcial</label>
+              <label class="training-item"><input type="checkbox" id="arm_imp"> Improvisada</label>
+            </div>
+            <div class="sec-label" style="margin:4px 0 2px;">Herramientas y Otras</div>
+            <textarea class="field-box" id="herramientas" rows="2" placeholder="—"></textarea>
+            <div class="sec-label" style="margin:4px 0 2px;">Idiomas</div>
+            <textarea class="field-box" id="idiomas" rows="2" placeholder="—"></textarea>
+          </div>
+
+        </div><!-- /p1-left -->
+
+        <!-- COLUMNA DERECHA -->
+        <div class="p1-right">
+
+          <!-- VELOCIDAD / SALTO / CONDICIONES / PASIVAS -->
+          <div class="row-speed-cond">
+            <div class="cbox">
+              <div class="sec-title">Velocidad</div>
+              <input class="field" id="velocidad" placeholder="9m">
+            </div>
+            <div class="cbox">
+              <div class="sec-title">Salto</div>
+              <div class="jump-col">
+                <div class="jump-item"><span style="font-family:'Cinzel',serif;font-size:0.58rem;">Largo</span><input
+                    id="salto_largo" placeholder="0m"></div>
+                <div class="jump-item"><span style="font-family:'Cinzel',serif;font-size:0.58rem;">Alto</span><input
+                    id="salto_alto" placeholder="0m"></div>
+              </div>
+            </div>
+            <div>
+              <div class="cbox" style="margin-bottom:6px;">
+                <div class="sec-title">Condiciones & Efectos</div>
+                <textarea class="field-box" id="condiciones" rows="2" placeholder="—"></textarea>
+              </div>
+              <div class="passive-box">
+                <div class="passive-item"><span>Percepción Pasiva</span><span class="passive-val" id="p_perc">10</span>
+                </div>
+                <div class="passive-item"><span>Investigación Pasiva</span><span class="passive-val"
+                    id="p_inv">10</span></div>
+                <div class="passive-item"><span>Intuición Pasiva</span><span class="passive-val" id="p_intu">10</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ARMAS -->
+          <div class="cbox">
+            <div class="sec-title">Armas & Trucos de Daño</div>
+            <table class="weapons-table">
+              <thead>
+                <tr>
+                  <th style="width:35%">Nombre</th>
+                  <th style="width:18%">Bonif. Atq / CD</th>
+                  <th style="width:22%">Daño y Tipo</th>
+                  <th>Notas</th>
+                </tr>
+              </thead>
+              <tbody id="weapons-tbody"></tbody>
+            </table>
+          </div>
+
+          <!-- RASGOS DE CLASE -->
+          <div class="cbox">
+            <div class="sec-title">Rasgos de Clase</div>
+            <textarea class="field-box" id="rasgos_clase" rows="6"
+              placeholder="Describe los rasgos de clase, habilidades especiales, etc."></textarea>
+          </div>
+
+          <!-- ATRIBUTOS ESPECIE + DOTES -->
+          <div class="sm-grid-2">
+            <div class="cbox">
+              <div class="sec-title">Atributos de Especie</div>
+              <div style="display:flex;gap:6px;margin-bottom:4px;">
+                <div>
+                  <div class="sec-label">Tamaño</div><input class="field" id="tam" placeholder="Mediano">
+                </div>
+                <div>
+                  <div class="sec-label">Visión Osc.</div><input class="field" id="vision_osc" placeholder="—">
+                </div>
+              </div>
+              <textarea class="field-box" id="atrib_especie" rows="4" placeholder="Rasgos raciales..."></textarea>
+            </div>
+            <div class="cbox">
+              <div class="sec-title">Dotes</div>
+              <textarea class="field-box" id="dotes" rows="6" placeholder="Dotes del personaje..."></textarea>
+            </div>
+          </div>
+
+          <!-- CANSANCIO -->
+          <div class="cbox" style="display:flex;align-items:center;gap:10px;">
+            <div class="sec-label" style="flex-shrink:0;">Cansancio</div>
+            <input class="field" id="cansancio" type="number" min="0" max="6" placeholder="0" style="width:60px;">
+            <div style="flex:1;font-family:'Cinzel',serif;font-size:0.6rem;color:var(--ink-light);">Nivel (0–6)</div>
+          </div>
+
+        </div><!-- /p1-right -->
+      </div><!-- /p1-main -->
+
+    </div><!-- /sheet-p1 -->
+  </div><!-- /page-0 -->
+
+
+  <!-- ======================================================
+     PÁGINA 2 — EQUIPO
+     ====================================================== -->
+  <div class="sheet-page" id="page-1">
+    <div class="sheet" id="sheet-p2">
+
+      <div class="fancy-divider"><span>⚔ Fifth Edition ⚔</span></div>
+
+      <div style="display:grid;grid-template-columns:240px 1fr 220px;gap:14px;">
+
+        <!-- EQUIPO IZQUIERDA -->
+        <div>
+          <div class="cbox" style="margin-bottom:8px;">
+            <div class="sec-title">Equipamiento</div>
+            <div class="equip-title">Armadura Puesta</div>
+            <input class="field" id="armadura_puesta" placeholder="—" style="margin-bottom:6px;">
+            <div class="equip-title">Armas</div>
+            <textarea class="field-box" id="armas_equip" rows="4" placeholder="—"></textarea>
+            <div class="equip-title" style="margin-top:4px;">Munición, Pociones y Consumibles</div>
+            <textarea class="field-box" id="municion" rows="3" placeholder="—"></textarea>
+            <div class="equip-title" style="margin-top:4px;">Otro Equipamiento</div>
+            <textarea class="field-box" id="otro_equip" rows="4" placeholder="—"></textarea>
+          </div>
+
+          <!-- MONEDAS -->
+          <div class="cbox">
+            <div class="sec-title">Monedas</div>
+            <div class="coins-grid">
+              <div class="coin-box">
+                <div class="coin-label">PC</div><input class="coin-input" id="pc" type="number" value="0">
+              </div>
+              <div class="coin-box">
+                <div class="coin-label">PP</div><input class="coin-input" id="pp" type="number" value="0">
+              </div>
+              <div class="coin-box">
+                <div class="coin-label">PE</div><input class="coin-input" id="pe" type="number" value="0">
+              </div>
+              <div class="coin-box">
+                <div class="coin-label">PO</div><input class="coin-input" id="po" type="number" value="0">
+              </div>
+              <div class="coin-box">
+                <div class="coin-label">PPT</div><input class="coin-input" id="ppt" type="number" value="0">
+              </div>
+            </div>
+            <div class="sec-label" style="margin-top:6px;">Otras Riquezas</div>
+            <textarea class="field-box" id="otras_riquezas" rows="2" placeholder="—"></textarea>
+          </div>
+
+          <!-- SINTONIZACIÓN MÁGICA -->
+          <div class="cbox" style="margin-top:8px;">
+            <div class="sec-title">Sintonización Objetos Mágicos</div>
+            <input class="field" id="magic1" placeholder="—" style="margin-bottom:3px;">
+            <input class="field" id="magic2" placeholder="—" style="margin-bottom:3px;">
+            <input class="field" id="magic3" placeholder="—">
+          </div>
+
+          <!-- CARGA -->
+          <div class="cbox" style="margin-top:8px;">
+            <div class="sm-grid-3">
+              <div>
+                <div class="sec-label">Carga Actual</div><input class="field" id="carga_act" placeholder="0 kg">
+              </div>
+              <div>
+                <div class="sec-label">Carga Máx.</div><input class="field" id="carga_max" placeholder="0 kg">
+              </div>
+              <div>
+                <div class="sec-label">Empuj./Arras.</div><input class="field" id="carga_emp" placeholder="0 kg">
+              </div>
+            </div>
+          </div>
+        </div><!-- /equipo izquierda -->
+
+        <!-- CENTRO - HISTORIA Y PERSONALIDAD -->
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="cbox" style="flex:1;">
+            <div class="sec-title">Resumen de Historia y Personalidad</div>
+            <textarea class="field-box" id="historia_pers" rows="14"
+              placeholder="Escribe aquí el trasfondo, personalidad e historia de tu personaje..."></textarea>
+            <div class="sec-label" style="margin-top:6px;">Alineamiento</div>
+            <input class="field" id="alineamiento" placeholder="Neutral Bueno">
+          </div>
+          <div class="cbox">
+            <div class="sec-title">Rasgos Adicionales de Clase & Notas</div>
+            <textarea class="field-box" id="rasgos_adicionales" rows="10"
+              placeholder="Habilidades adicionales, notas de campaña, etc."></textarea>
+          </div>
+        </div>
+
+        <!-- DERECHA - APARIENCIA -->
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="cbox">
+            <div class="sec-title">Apariencia</div>
+            <div class="portrait-frame" id="portrait-frame" onclick="document.getElementById('portrait-input').click()">
+              <img id="portrait-img" src="" style="display:none;">
+              <div class="portrait-placeholder" id="portrait-placeholder">🎨<br>Haz clic para<br>subir imagen</div>
+            </div>
+            <input type="file" id="portrait-input" accept="image/*" style="display:none" onchange="loadPortrait(event)">
+            <div class="sec-label" style="margin-top:4px;">Descripción Física</div>
+            <textarea class="field-box" id="desc_fisica" rows="4"
+              placeholder="Altura, complexión, rasgos..."></textarea>
+          </div>
+        </div>
+
+      </div><!-- /grid -->
+
+      <div class="fancy-divider mt8"><span>Compañero o Familiar</span></div>
+
+      <!-- COMPAÑERO -->
+      <div style="border:2px solid var(--border-dark);border-radius:4px;padding:10px;">
+        <div style="display:grid;grid-template-columns:1fr 80px 1fr 200px;gap:10px;align-items:start;">
+          <div>
+            <div class="sec-label">Nombre Acompañante</div><input class="field" id="comp_nombre" placeholder="—"
+              style="margin-bottom:4px;">
+            <div class="sec-label">Tipo de Acompañante</div><input class="field" id="comp_tipo" placeholder="—"
+              style="margin-bottom:4px;">
+            <div class="sec-label">Tipo de Criatura y Tamaño</div><input class="field" id="comp_criatura"
+              placeholder="—">
+          </div>
+          <div>
+            <div class="big-box" style="margin-bottom:6px;">
+              <input class="big-number" id="comp_ca" type="number" value="10">
+              <div class="big-label">CA</div>
+            </div>
+            <div>
+              <div class="sec-label">Velocidad</div><input class="field" id="comp_vel" placeholder="9m">
+            </div>
+          </div>
+          <div>
+            <div class="sec-label" style="margin-bottom:2px;">Puntos de Golpe</div>
+            <div class="sm-grid-3" style="margin-bottom:6px;">
+              <div>
+                <div class="sec-label">Actuales</div><input class="field" id="comp_hp" type="number" placeholder="0">
+              </div>
+              <div>
+                <div class="sec-label">Máximo</div><input class="field" id="comp_hp_max" type="number" placeholder="0">
+              </div>
+              <div>
+                <div class="sec-label">Temp.</div><input class="field" id="comp_hp_temp" type="number" placeholder="0">
+              </div>
+            </div>
+            <div class="sm-grid-2">
+              <div>
+                <div class="sec-label">Dados Gastados</div><input class="field" id="comp_dg_g" placeholder="0">
+              </div>
+              <div>
+                <div class="sec-label">Dados Máx.</div><input class="field" id="comp_dg_m" placeholder="1d6">
+              </div>
+            </div>
+            <div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap;">
+              <div style="text-align:center;">
+                <div class="sec-label">FUE</div><input class="field" id="comp_fue" style="width:36px;" placeholder="10">
+              </div>
+              <div style="text-align:center;">
+                <div class="sec-label">DES</div><input class="field" id="comp_des" style="width:36px;" placeholder="10">
+              </div>
+              <div style="text-align:center;">
+                <div class="sec-label">CON</div><input class="field" id="comp_con" style="width:36px;" placeholder="10">
+              </div>
+              <div style="text-align:center;">
+                <div class="sec-label">INT</div><input class="field" id="comp_int" style="width:36px;" placeholder="10">
+              </div>
+              <div style="text-align:center;">
+                <div class="sec-label">SAB</div><input class="field" id="comp_sab" style="width:36px;" placeholder="10">
+              </div>
+              <div style="text-align:center;">
+                <div class="sec-label">CAR</div><input class="field" id="comp_car" style="width:36px;" placeholder="10">
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="sec-title" style="font-size:0.6rem;">Ataques y Daño</div>
+            <table class="weapons-table">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Bonif.</th>
+                  <th>Daño</th>
+                </tr>
+              </thead>
+              <tbody id="comp-attacks">
+                <tr>
+                  <td><input placeholder="—"></td>
+                  <td><input placeholder="+0"></td>
+                  <td><input placeholder="1d6"></td>
+                </tr>
+                <tr>
+                  <td><input placeholder="—"></td>
+                  <td><input placeholder="+0"></td>
+                  <td><input placeholder="1d6"></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="sec-label" style="margin-top:4px;">Características y Rasgos</div>
+            <textarea class="field-box" id="comp_rasgos" rows="3" placeholder="—"></textarea>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /sheet-p2 -->
+  </div><!-- /page-1 -->
+
+
+  <!-- ======================================================
+     PÁGINA 3 — CONJUROS
+     ====================================================== -->
+  <div class="sheet-page" id="page-2">
+    <div class="sheet" id="sheet-p3">
+
+      <div class="fancy-divider"><span>⚔ Fifth Edition — Conjuros ⚔</span></div>
+
+      <div style="display:grid;grid-template-columns:1fr 220px;gap:14px;margin-bottom:10px;">
+
+        <!-- ESPACIOS DE CONJURO -->
+        <div>
+          <div class="sec-title">Espacios de Conjuro</div>
+          <div class="spell-slots-grid">
+            <div class="spell-slot-box">
+              <div class="spell-slot-lvl">Nivel 1</div>
+              <div class="spell-slot-nums"><input class="spell-slot-num" id="ss1_tot" placeholder="T"><input
+                  class="spell-slot-num" id="ss1_gas" placeholder="G"></div>
+            </div>
+            <div class="spell-slot-box">
+              <div class="spell-slot-lvl">Nivel 2</div>
+              <div class="spell-slot-nums"><input class="spell-slot-num" id="ss2_tot" placeholder="T"><input
+                  class="spell-slot-num" id="ss2_gas" placeholder="G"></div>
+            </div>
+            <div class="spell-slot-box">
+              <div class="spell-slot-lvl">Nivel 3</div>
+              <div class="spell-slot-nums"><input class="spell-slot-num" id="ss3_tot" placeholder="T"><input
+                  class="spell-slot-num" id="ss3_gas" placeholder="G"></div>
+            </div>
+            <div class="spell-slot-box">
+              <div class="spell-slot-lvl">Nivel 4</div>
+              <div class="spell-slot-nums"><input class="spell-slot-num" id="ss4_tot" placeholder="T"><input
+                  class="spell-slot-num" id="ss4_gas" placeholder="G"></div>
+            </div>
+            <div class="spell-slot-box">
+              <div class="spell-slot-lvl">Nivel 5</div>
+              <div class="spell-slot-nums"><input class="spell-slot-num" id="ss5_tot" placeholder="T"><input
+                  class="spell-slot-num" id="ss5_gas" placeholder="G"></div>
+            </div>
+            <div class="spell-slot-box">
+              <div class="spell-slot-lvl">Nivel 6</div>
+              <div class="spell-slot-nums"><input class="spell-slot-num" id="ss6_tot" placeholder="T"><input
+                  class="spell-slot-num" id="ss6_gas" placeholder="G"></div>
+            </div>
+            <div class="spell-slot-box">
+              <div class="spell-slot-lvl">Nivel 7</div>
+              <div class="spell-slot-nums"><input class="spell-slot-num" id="ss7_tot" placeholder="T"><input
+                  class="spell-slot-num" id="ss7_gas" placeholder="G"></div>
+            </div>
+            <div class="spell-slot-box">
+              <div class="spell-slot-lvl">Nivel 8</div>
+              <div class="spell-slot-nums"><input class="spell-slot-num" id="ss8_tot" placeholder="T"><input
+                  class="spell-slot-num" id="ss8_gas" placeholder="G"></div>
+            </div>
+            <div class="spell-slot-box">
+              <div class="spell-slot-lvl">Nivel 9</div>
+              <div class="spell-slot-nums"><input class="spell-slot-num" id="ss9_tot" placeholder="T"><input
+                  class="spell-slot-num" id="ss9_gas" placeholder="G"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- APTITUD MÁGICA -->
+        <div>
+          <div class="cbox" style="margin-bottom:8px;">
+            <div class="sec-title">Aptitud Mágica</div>
+            <input class="field" id="apt_magica" placeholder="—" style="margin-bottom:4px;">
+            <div class="sec-label">Mod. por Aptitud Mágica</div>
+            <input class="field" id="mod_apt" placeholder="+0" style="margin-bottom:4px;">
+            <div class="sec-label">CD de Salvación de Conjuros</div>
+            <input class="field" id="cd_conj" placeholder="8" style="margin-bottom:4px;">
+            <div class="sec-label">Bonificador de Ataque de Conjuros</div>
+            <input class="field" id="bon_atq_conj" placeholder="+0">
+          </div>
+          <div class="cbox">
+            <div class="sec-title">Componentes de Conjuro</div>
+            <div class="sec-label">Foco de Lanzamiento</div>
+            <input class="field" id="foco" placeholder="—" style="margin-bottom:4px;">
+            <div class="sec-label">Componentes Materiales</div>
+            <textarea class="field-box" id="comp_mat" rows="3" placeholder="—"></textarea>
+            <div style="display:flex;gap:6px;margin-top:4px;">
+              <div>
+                <div class="sec-label">Puntos Hechicería Act.</div><input class="field" id="ph_act" type="number"
+                  placeholder="0">
+              </div>
+              <div>
+                <div class="sec-label">Máx.</div><input class="field" id="ph_max" type="number" placeholder="0">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABLA DE CONJUROS -->
+      <div class="cbox">
+        <div class="sec-title">Trucos y Conjuros Preparados</div>
+        <div style="overflow-x:auto;">
+          <table class="spells-table">
+            <thead>
+              <tr>
+                <th style="width:25px;">P</th>
+                <th style="width:30px;">Niv</th>
+                <th style="width:22%">Nombre</th>
+                <th style="width:14%">Escuela</th>
+                <th style="width:50px;">T.Lanc.</th>
+                <th style="width:50px;">Alcance</th>
+                <th style="width:60px;">Duración</th>
+                <th style="width:30px;">V</th>
+                <th style="width:30px;">S</th>
+                <th style="width:30px;">M</th>
+                <th>Notas</th>
+                <th style="width:35px;">Pág.</th>
+              </tr>
+            </thead>
+            <tbody id="spells-tbody"></tbody>
+          </table>
+        </div>
+        <button class="btn btn-primary" style="margin-top:6px;font-size:0.7rem;" onclick="addSpellRow()">+ Añadir
+          Conjuro</button>
+      </div>
+
+    </div><!-- /sheet-p3 -->
+  </div><!-- /page-2 -->
+
+
+  <!-- ======================================================
+     PÁGINA 4 — HISTORIA
+     ====================================================== -->
+  <div class="sheet-page" id="page-3">
+    <div class="sheet" id="sheet-p4">
+
+      <div class="fancy-divider"><span>⚔ Historia y Personalidad ⚔</span></div>
+
+      <div class="p4-grid">
+
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="cbox">
+            <div class="sec-title">Nombre del Personaje</div>
+            <input class="field" id="p4_nombre" placeholder="—">
+          </div>
+          <div class="cbox">
+            <div class="sec-title">Rasgos de Personalidad</div>
+            <textarea class="field-box" id="rasgos_pers" rows="4"
+              placeholder="Describe la personalidad del personaje..."></textarea>
+          </div>
+          <div class="cbox">
+            <div class="sec-title">Ideales</div>
+            <textarea class="field-box" id="ideales" rows="3" placeholder="Qué principios rigen su vida..."></textarea>
+          </div>
+          <div class="cbox">
+            <div class="sec-title">Vínculos</div>
+            <textarea class="field-box" id="vinculos" rows="3" placeholder="Conexiones importantes..."></textarea>
+          </div>
+          <div class="cbox">
+            <div class="sec-title">Defectos</div>
+            <textarea class="field-box" id="defectos" rows="3" placeholder="Puntos débiles y flaquezas..."></textarea>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="cbox">
+            <div class="sec-title">Aspecto del Personaje</div>
+            <div class="sm-grid-2" style="margin-bottom:6px;">
+              <div>
+                <div class="sec-label">Edad</div><input class="field" id="edad" placeholder="—">
+              </div>
+              <div>
+                <div class="sec-label">Altura</div><input class="field" id="altura" placeholder="—">
+              </div>
+              <div>
+                <div class="sec-label">Peso</div><input class="field" id="peso" placeholder="—">
+              </div>
+              <div>
+                <div class="sec-label">Ojos</div><input class="field" id="ojos" placeholder="—">
+              </div>
+              <div>
+                <div class="sec-label">Piel</div><input class="field" id="piel" placeholder="—">
+              </div>
+              <div>
+                <div class="sec-label">Pelo</div><input class="field" id="pelo" placeholder="—">
+              </div>
+            </div>
+            <div class="sec-label">Rasgos Físicos y Atributos Adicionales</div>
+            <textarea class="field-box" id="rasgos_fis" rows="3"
+              placeholder="Cicatrices, tatuajes, marcas..."></textarea>
+          </div>
+          <div class="cbox">
+            <div class="sec-title">Historia del Personaje</div>
+            <textarea class="field-box" id="hist_personaje" rows="10"
+              placeholder="Narra la historia de tu personaje..."></textarea>
+          </div>
+          <div class="cbox">
+            <div class="sec-title">Aliados y Organizaciones</div>
+            <div class="sm-grid-2">
+              <textarea class="field-box" id="aliados" rows="4" placeholder="Nombres, organizaciones..."></textarea>
+              <div>
+                <div class="sec-label">Símbolo / Emblema</div>
+                <div class="portrait-frame" id="symbol-frame" onclick="document.getElementById('symbol-input').click()"
+                  style="min-height:90px;">
+                  <img id="symbol-img" src="" style="display:none;width:100%;height:100%;object-fit:contain;">
+                  <div class="portrait-placeholder" id="symbol-placeholder" style="font-size:0.65rem;">🛡️<br>Símbolo
+                  </div>
+                </div>
+                <input type="file" id="symbol-input" accept="image/*" style="display:none" onchange="loadSymbol(event)">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div><!-- /sheet-p4 -->
+  </div><!-- /page-3 -->
+
+
+  <!-- ======================================================
+     MODAL — IMPORTAR PDF
+     ====================================================== -->
+  <div class="modal-overlay" id="modal-pdf">
+    <div class="modal">
+      <h2>📑 Importar desde PDF</h2>
+      <p>
+        Sube un PDF de ficha de D&D 5.5 con campos de formulario editables.
+        La herramienta leerá los campos automáticamente y los mapeará a la ficha.
+        Puedes ajustar el mapeo antes de aplicarlo.
+      </p>
+
+      <!-- DROP ZONE -->
+      <div class="modal-drop-zone" id="pdf-drop-zone">
+        <div class="drop-icon">📄</div>
+        <p>Arrastra aquí tu PDF o haz clic para seleccionarlo</p>
+        <p style="font-size:0.75rem;color:var(--ink-light);margin-top:6px;">Solo archivos .pdf</p>
+      </div>
+
+      <!-- STATUS -->
+      <div class="pdf-status" id="pdf-status"></div>
+
+      <!-- MAPPING TABLE -->
+      <div id="pdf-map-section" style="display:none;">
+        <p style="margin-bottom:6px;font-size:0.82rem;">
+          Revisa el mapeo de campos y ajusta si es necesario. Los campos vacíos del PDF se omiten automáticamente.
+        </p>
+        <div style="overflow-x:auto;">
+          <table class="modal-map-table">
+            <thead>
+              <tr>
+                <th style="width:30%">Campo PDF</th>
+                <th style="width:35%">Valor leído</th>
+                <th style="width:35%">Campo destino (HTML)</th>
+              </tr>
+            </thead>
+            <tbody id="pdf-map-body"></tbody>
+          </table>
+        </div>
+        <p style="font-size:0.75rem;color:var(--ink-light);margin-bottom:10px;">
+          Selecciona "(ignorar)" para los campos que no quieras importar.
+        </p>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="modal-footer">
+        <button class="btn btn-danger" onclick="closeImportPDFModal()">Cancelar</button>
+        <button class="btn btn-success" onclick="applyPDFMapping()" id="btn-apply-pdf">Aplicar e Importar</button>
+      </div>
     </div>
-    <script src="js/index.js"></script>
+  </div>
+
+  <!-- ===================== NOTIFICATION ===================== -->
+  <div class="notif" id="notif"></div>
+
+  <!-- ===================== SCRIPTS ===================== -->
+  <script src="js/main.js"></script>
+
 </body>
 
 </html>

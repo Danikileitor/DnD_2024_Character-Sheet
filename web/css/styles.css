@@ -1,0 +1,946 @@
+/* ===================== VARIABLES ===================== */
+:root {
+  --parchment: #f4ead5;
+  --parchment-dark: #e8d5b0;
+  --parchment-darker: #d4b896;
+  --ink: #1a0f00;
+  --ink-light: #3d2b1a;
+  --border: #6b4c2a;
+  --border-dark: #3d2b1a;
+  --red: #8b1a1a;
+  --gold: #8b6914;
+  --shadow: rgba(0, 0, 0, 0.3);
+  --field-bg: rgba(255, 255, 255, 0.4);
+  --field-border: #8b6914;
+}
+
+/* ===================== RESET ===================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===================== BODY ===================== */
+body {
+  background: #2a1a0a
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect width='60' height='60' fill='%232a1a0a'/%3E%3Ccircle cx='30' cy='30' r='20' fill='none' stroke='%23402010' stroke-width='0.5' opacity='0.3'/%3E%3C/svg%3E");
+  font-family: "Crimson Text", serif;
+  color: var(--ink);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* ===================== TOP BAR ===================== */
+.top-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.top-bar h1 {
+  font-family: "Cinzel", serif;
+  color: var(--parchment);
+  font-size: 1.4rem;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+/* ===================== BUTTONS ===================== */
+.btn {
+  font-family: "Cinzel", serif;
+  font-size: 0.78rem;
+  padding: 7px 16px;
+  border: 2px solid var(--parchment-dark);
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+.btn-primary {
+  background: #5a3010;
+  color: var(--parchment);
+}
+.btn-primary:hover {
+  background: #7a4818;
+}
+.btn-danger {
+  background: #6b1a1a;
+  color: var(--parchment);
+}
+.btn-danger:hover {
+  background: #8b2a2a;
+}
+.btn-success {
+  background: #1a4a1a;
+  color: var(--parchment);
+}
+.btn-success:hover {
+  background: #2a6a2a;
+}
+.btn-info {
+  background: #1a3060;
+  color: var(--parchment);
+}
+.btn-info:hover {
+  background: #2a4080;
+}
+.btn-warning {
+  background: #5a3a00;
+  color: var(--parchment);
+}
+.btn-warning:hover {
+  background: #7a5200;
+}
+
+/* ===================== PAGE TABS ===================== */
+.page-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+.page-tab {
+  font-family: "Cinzel", serif;
+  font-size: 0.75rem;
+  padding: 6px 18px;
+  background: #3d2010;
+  color: var(--parchment-dark);
+  border: 1px solid #5a3a1a;
+  border-bottom: none;
+  cursor: pointer;
+  border-radius: 6px 6px 0 0;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.page-tab.active {
+  background: var(--parchment);
+  color: var(--ink);
+  border-color: var(--border);
+  font-weight: 600;
+}
+
+/* ===================== SHEET PAGES ===================== */
+.sheet-page {
+  display: none;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.sheet-page.active {
+  display: block;
+}
+
+/* ===================== SHEET WRAPPER ===================== */
+.sheet {
+  background: var(--parchment);
+  border: 3px solid var(--border-dark);
+  border-radius: 4px;
+  padding: 18px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    inset 0 0 60px rgba(180, 140, 80, 0.2);
+  background-image:
+    radial-gradient(
+      ellipse at 10% 10%,
+      rgba(255, 240, 200, 0.3) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse at 90% 90%,
+      rgba(200, 160, 100, 0.2) 0%,
+      transparent 50%
+    );
+  position: relative;
+}
+.sheet::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* ===================== FORM FIELDS ===================== */
+.field {
+  background: var(--field-bg);
+  border: none;
+  border-bottom: 1.5px solid var(--field-border);
+  font-family: "Crimson Text", serif;
+  font-size: 0.95rem;
+  color: var(--ink);
+  width: 100%;
+  padding: 2px 4px;
+  outline: none;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+  min-width: 0;
+}
+.field:focus {
+  background: rgba(255, 255, 220, 0.7);
+  border-bottom-color: var(--red);
+}
+.field-box {
+  background: var(--field-bg);
+  border: 1.5px solid var(--field-border);
+  font-family: "Crimson Text", serif;
+  font-size: 0.95rem;
+  color: var(--ink);
+  width: 100%;
+  padding: 4px 6px;
+  outline: none;
+  resize: vertical;
+  min-height: 40px;
+  transition: background 0.15s;
+}
+.field-box:focus {
+  background: rgba(255, 255, 220, 0.7);
+}
+
+/* ===================== LABELS ===================== */
+.sec-label {
+  font-family: "Cinzel", serif;
+  font-size: 0.62rem;
+  letter-spacing: 1.5px;
+  color: var(--ink-light);
+  text-transform: uppercase;
+  line-height: 1;
+  margin-bottom: 1px;
+  white-space: nowrap;
+}
+.sec-title {
+  font-family: "Cinzel", serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--ink);
+  text-align: center;
+  border-bottom: 2px solid var(--border-dark);
+  padding-bottom: 3px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+/* ===================== BIG NUMBER BOX ===================== */
+.big-box {
+  border: 2.5px solid var(--border-dark);
+  border-radius: 4px;
+  background: var(--field-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 4px 4px;
+  position: relative;
+}
+.big-box .big-number {
+  font-family: "Cinzel", serif;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  background: none;
+  border: none;
+  border-bottom: 1.5px solid var(--field-border);
+  width: 60px;
+  color: var(--ink);
+  outline: none;
+  padding: 0;
+}
+.big-box .big-label {
+  font-family: "Cinzel", serif;
+  font-size: 0.55rem;
+  letter-spacing: 1px;
+  color: var(--ink-light);
+  text-transform: uppercase;
+  margin-top: 3px;
+  text-align: center;
+}
+
+/* ===================== STAT BLOCK ===================== */
+.stat-block {
+  border: 2px solid var(--border-dark);
+  border-radius: 4px;
+  background: rgba(180, 140, 80, 0.08);
+  padding: 8px 6px 6px;
+  text-align: center;
+}
+.stat-name {
+  font-family: "Cinzel", serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--parchment-dark);
+  padding: 2px 6px;
+  margin: -8px -6px 4px;
+  border-radius: 2px 2px 0 0;
+  border-bottom: 1px solid var(--border);
+}
+.stat-mod {
+  font-family: "Cinzel", serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 2px;
+  border-bottom: 1.5px solid var(--field-border);
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  width: 52px;
+  text-align: center;
+  color: var(--ink);
+  outline: none;
+  padding: 0;
+}
+.stat-score {
+  font-family: "Cinzel", serif;
+  font-size: 0.85rem;
+  border-bottom: 1.5px solid var(--field-border);
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  width: 40px;
+  text-align: center;
+  color: var(--ink-light);
+  outline: none;
+  padding: 0;
+}
+.stat-sub {
+  font-size: 0.52rem;
+  color: var(--ink-light);
+  font-family: "Cinzel", serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ===================== SKILL ROWS ===================== */
+.skill-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 2px;
+}
+.skill-check {
+  width: 13px;
+  height: 13px;
+  border: 1.5px solid var(--border);
+  border-radius: 50%;
+  flex-shrink: 0;
+  cursor: pointer;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  transition: background 0.15s;
+}
+.skill-check:checked {
+  background: var(--ink);
+}
+.skill-bonus {
+  font-family: "Cinzel", serif;
+  font-size: 0.7rem;
+  width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.skill-name {
+  font-family: "Crimson Text", serif;
+  font-size: 0.82rem;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===================== DEATH DIAMONDS ===================== */
+.death-diamond {
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--border-dark);
+  transform: rotate(45deg);
+  background: transparent;
+  display: inline-block;
+  cursor: pointer;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.death-diamond.filled {
+  background: var(--ink);
+}
+.death-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ===================== INSPIRATION ===================== */
+.inspiration-box {
+  border: 2px solid var(--border-dark);
+  border-radius: 4px;
+  padding: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.inspiration-box.active {
+  background: var(--red);
+  color: var(--parchment);
+}
+.inspiration-icon {
+  font-size: 1.4rem;
+}
+
+/* ===================== PASSIVE SKILLS ===================== */
+.passive-box {
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.04);
+}
+.passive-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "Cinzel", serif;
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  padding: 2px 0;
+}
+.passive-val {
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* ===================== WEAPONS TABLE ===================== */
+.weapons-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+.weapons-table th {
+  font-family: "Cinzel", serif;
+  font-size: 0.58rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid var(--border-dark);
+  padding: 3px 4px;
+  text-align: left;
+  color: var(--ink-light);
+}
+.weapons-table td {
+  padding: 2px 4px;
+}
+.weapons-table tr:nth-child(even) td {
+  background: rgba(0, 0, 0, 0.03);
+}
+.weapons-table input {
+  border: none;
+  border-bottom: 1px solid var(--field-border);
+  background: transparent;
+  font-family: "Crimson Text", serif;
+  font-size: 0.82rem;
+  color: var(--ink);
+  outline: none;
+  width: 100%;
+  padding: 1px 2px;
+}
+
+/* ===================== SPELLS TABLE ===================== */
+.spells-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+}
+.spells-table th {
+  font-family: "Cinzel", serif;
+  font-size: 0.55rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid var(--border-dark);
+  padding: 3px 3px;
+  text-align: left;
+  color: var(--ink-light);
+  white-space: nowrap;
+}
+.spells-table td {
+  padding: 1px 3px;
+  border-bottom: 0.5px solid rgba(107, 76, 42, 0.2);
+}
+.spells-table input {
+  border: none;
+  background: transparent;
+  font-family: "Crimson Text", serif;
+  font-size: 0.78rem;
+  color: var(--ink);
+  outline: none;
+  width: 100%;
+}
+.spells-table input[type="checkbox"] {
+  width: 12px;
+  height: 12px;
+}
+
+/* ===================== SPELL SLOTS ===================== */
+.spell-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.spell-slot-box {
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  padding: 4px 6px;
+  text-align: center;
+}
+.spell-slot-lvl {
+  font-family: "Cinzel", serif;
+  font-size: 0.58rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink-light);
+}
+.spell-slot-nums {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  margin-top: 2px;
+}
+.spell-slot-num {
+  font-family: "Cinzel", serif;
+  font-size: 0.72rem;
+  border-bottom: 1px solid var(--field-border);
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  width: 30px;
+  text-align: center;
+  color: var(--ink);
+  outline: none;
+}
+
+/* ===================== PORTRAIT ===================== */
+.portrait-frame {
+  border: 2.5px solid var(--border-dark);
+  border-radius: 4px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.05);
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+}
+.portrait-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.portrait-placeholder {
+  font-family: "Cinzel", serif;
+  font-size: 0.7rem;
+  color: var(--ink-light);
+  text-align: center;
+  padding: 12px;
+}
+
+/* ===================== COINS ===================== */
+.coins-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+}
+.coin-box {
+  text-align: center;
+}
+.coin-label {
+  font-family: "Cinzel", serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--ink-light);
+}
+.coin-input {
+  font-family: "Cinzel", serif;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  width: 100%;
+  padding: 3px;
+  background: var(--field-bg);
+  color: var(--ink);
+  outline: none;
+}
+
+/* ===================== TRAINING CHECKBOXES ===================== */
+.training-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.training-item {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-family: "Cinzel", serif;
+  font-size: 0.58rem;
+  letter-spacing: 1px;
+}
+.training-item input[type="checkbox"] {
+  width: 13px;
+  height: 13px;
+}
+
+/* ===================== DIVIDERS ===================== */
+.fancy-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+}
+.fancy-divider::before,
+.fancy-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.fancy-divider span {
+  font-family: "Cinzel", serif;
+  font-size: 0.58rem;
+  letter-spacing: 2px;
+  color: var(--border);
+  text-transform: uppercase;
+}
+
+/* ===================== COMPACT BOX ===================== */
+.cbox {
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  padding: 6px;
+}
+
+/* ===================== EQUIP SECTION ===================== */
+.equip-title {
+  font-family: "Cinzel", serif;
+  font-size: 0.6rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+  padding-bottom: 2px;
+}
+
+/* ===================== NOTIFICATION ===================== */
+.notif {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #2a4a1a;
+  color: var(--parchment);
+  font-family: "Cinzel", serif;
+  font-size: 0.75rem;
+  padding: 10px 18px;
+  border-radius: 4px;
+  border: 1px solid var(--parchment-dark);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s;
+  pointer-events: none;
+  z-index: 999;
+}
+.notif.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.notif.error {
+  background: #4a1a1a;
+}
+.notif.info {
+  background: #1a2a4a;
+}
+
+/* ===================== JUMP ===================== */
+.jump-col {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.jump-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: "Cinzel", serif;
+  font-size: 0.58rem;
+  letter-spacing: 1px;
+}
+.jump-item input {
+  width: 40px;
+  font-family: "Cinzel", serif;
+  font-size: 0.75rem;
+  border: none;
+  border-bottom: 1px solid var(--field-border);
+  background: none;
+  text-align: center;
+  color: var(--ink);
+  outline: none;
+}
+
+/* ===================== CONDITIONS BOX ===================== */
+.conditions-box {
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  min-height: 60px;
+  padding: 4px;
+  background: var(--field-bg);
+}
+
+/* ===================== GRID UTILITIES ===================== */
+.sm-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.sm-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+}
+.sm-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+.mt4 {
+  margin-top: 4px;
+}
+.mt6 {
+  margin-top: 6px;
+}
+.mt8 {
+  margin-top: 8px;
+}
+
+/* ===================== PAGE 1 LAYOUT ===================== */
+.header-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+.header-fields2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-top: 6px;
+}
+.p1-main {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 10px;
+}
+.p1-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.p1-right {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.row-speed-cond {
+  display: grid;
+  grid-template-columns: 120px 100px 1fr;
+  gap: 8px;
+}
+
+/* ===================== PAGE 4 LAYOUT ===================== */
+.p4-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* ===================== PDF IMPORT MODAL ===================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.modal {
+  background: var(--parchment);
+  border: 3px solid var(--border-dark);
+  border-radius: 6px;
+  padding: 24px;
+  max-width: 560px;
+  width: 90%;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+  transform: translateY(20px);
+  transition: transform 0.25s;
+}
+.modal-overlay.open .modal {
+  transform: translateY(0);
+}
+.modal h2 {
+  font-family: "Cinzel", serif;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 2px solid var(--border-dark);
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+}
+.modal p {
+  font-family: "Crimson Text", serif;
+  font-size: 0.9rem;
+  color: var(--ink-light);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+.modal-drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: 6px;
+  padding: 32px;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+  margin-bottom: 14px;
+}
+.modal-drop-zone:hover,
+.modal-drop-zone.drag-over {
+  background: rgba(139, 105, 20, 0.1);
+  border-color: var(--border-dark);
+}
+.modal-drop-zone .drop-icon {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+.modal-drop-zone p {
+  margin: 0;
+  font-size: 0.85rem;
+}
+.modal-map-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  margin-bottom: 14px;
+  max-height: 260px;
+  overflow-y: auto;
+  display: block;
+}
+.modal-map-table th {
+  font-family: "Cinzel", serif;
+  font-size: 0.58rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid var(--border-dark);
+  padding: 4px 6px;
+  text-align: left;
+  color: var(--ink-light);
+  position: sticky;
+  top: 0;
+  background: var(--parchment-dark);
+}
+.modal-map-table td {
+  padding: 3px 6px;
+  border-bottom: 0.5px solid rgba(107, 76, 42, 0.2);
+}
+.modal-map-table td:first-child {
+  font-family: "Cinzel", serif;
+  font-size: 0.65rem;
+  color: var(--ink-light);
+}
+.modal-map-table input,
+.modal-map-table select {
+  font-family: "Crimson Text", serif;
+  font-size: 0.82rem;
+  border: none;
+  border-bottom: 1px solid var(--field-border);
+  background: none;
+  color: var(--ink);
+  outline: none;
+  width: 100%;
+}
+.modal-footer {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.pdf-status {
+  font-family: "Cinzel", serif;
+  font-size: 0.7rem;
+  color: var(--ink-light);
+  padding: 6px 0;
+  text-align: center;
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 700px) {
+  .p1-main {
+    grid-template-columns: 1fr;
+  }
+  .p4-grid {
+    grid-template-columns: 1fr;
+  }
+  .header-fields {
+    grid-template-columns: 1fr 1fr;
+  }
+  .header-fields2 {
+    grid-template-columns: 1fr 1fr;
+  }
+  .row-speed-cond {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===================== PRINT ===================== */
+@media print {
+  body {
+    background: white;
+    padding: 0;
+  }
+  .top-bar,
+  .page-tabs {
+    display: none;
+  }
+  .sheet-page {
+    display: block !important;
+    page-break-after: always;
+  }
+  .sheet {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+  .modal-overlay {
+    display: none;
+  }
+}
